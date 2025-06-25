@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= vehicle.vehicleName %> - Vehicle Details</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚗 Vehicle Details</h1>
+            <a href="/" class="btn btn-secondary">← Back to List</a>
+        </header>
+
+        <main>
+            <div class="vehicle-detail">
+                <div class="vehicle-image-large">
+                    <img src="<%= vehicle.image %>" alt="<%= vehicle.vehicleName %>" onerror="this.src='https://via.placeholder.com/600x400?text=No+Image'">
+                </div>
+                
+                <div class="vehicle-info-detail">
+                    <h2><%= vehicle.vehicleName %></h2>
+                    
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <label>Brand:</label>
+                            <span><%= vehicle.brand %></span>
+                        </div>
+                        
+                        <div class="info-item">
+                            <label>Price:</label>
+                            <span class="price">$<%= vehicle.price.toLocaleString() %></span>
+                        </div>
+                        
+                        <div class="info-item full-width">
+                            <label>Description:</label>
+                            <p><%= vehicle.desc %></p>
+                        </div>
+                        
+                        <div class="info-item">
+                            <label>ID:</label>
+                            <span class="id"><%= vehicle.id %></span>
+                        </div>
+                    </div>
+                    
+                    <div class="vehicle-actions">
+                        <a href="/edit/<%= vehicle.id %>" class="btn btn-primary">Edit Vehicle</a>
+                        <button onclick="deleteVehicle('<%= vehicle.id %>')" class="btn btn-danger">Delete Vehicle</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function deleteVehicle(id) {
+            if (confirm('Are you sure you want to delete this vehicle? This action cannot be undone.')) {
+                fetch(`/api/vehicles/${id}`, {
+                    method: 'DELETE'
+                })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.href = '/';
+                    } else {
+                        alert('Error deleting vehicle');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error deleting vehicle');
+                });
+            }
+        }
+    </script>
+</body>
+</html> 

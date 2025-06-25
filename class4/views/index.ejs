@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicle Management System</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚗 Vehicle Management System</h1>
+            <a href="/create" class="btn btn-primary">Add New Vehicle</a>
+        </header>
+
+        <main>
+            <% if (vehicles.length === 0) { %>
+                <div class="empty-state">
+                    <h2>No vehicles found</h2>
+                    <p>Get started by adding your first vehicle!</p>
+                    <a href="/create" class="btn btn-primary">Add Vehicle</a>
+                </div>
+            <% } else { %>
+                <div class="vehicles-grid">
+                    <% vehicles.forEach(vehicle => { %>
+                        <div class="vehicle-card">
+                            <div class="vehicle-image">
+                                <img src="<%= vehicle.image %>" alt="<%= vehicle.vehicleName %>" onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
+                            </div>
+                            <div class="vehicle-info">
+                                <h3><%= vehicle.vehicleName %></h3>
+                                <p class="brand"><strong>Brand:</strong> <%= vehicle.brand %></p>
+                                <p class="price"><strong>Price:</strong> $<%= vehicle.price.toLocaleString() %></p>
+                                <p class="description"><%= vehicle.desc %></p>
+                            </div>
+                            <div class="vehicle-actions">
+                                <a href="/vehicle/<%= vehicle.id %>" class="btn btn-secondary">View</a>
+                                <a href="/edit/<%= vehicle.id %>" class="btn btn-primary">Edit</a>
+                                <button onclick="deleteVehicle('<%= vehicle.id %>')" class="btn btn-danger">Delete</button>
+                            </div>
+                        </div>
+                    <% }); %>
+                </div>
+            <% } %>
+        </main>
+    </div>
+
+    <script>
+        function deleteVehicle(id) {
+            if (confirm('Are you sure you want to delete this vehicle?')) {
+                fetch(`/api/vehicles/${id}`, {
+                    method: 'DELETE'
+                })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.reload();
+                    } else {
+                        alert('Error deleting vehicle');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error deleting vehicle');
+                });
+            }
+        }
+    </script>
+</body>
+</html> 
