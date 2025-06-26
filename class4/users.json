@@ -1,0 +1,16 @@
+[
+  {
+    "id": "1",
+    "username": "admin",
+    "password": "$2b$10$rQZ8K9mN2pL1vX3yU6wA7eB4cD5fG8hI9jK0lM1nO2pQ3rS4tU5vW6xY7z",
+    "email": "admin@example.com",
+    "age": 25
+  },
+  {
+    "id": "1750914092689",
+    "username": "nitingupta",
+    "password": "$2b$10$HpffsmiR.rvmKXOweR3cm.E/bpOB4Q108/djTYGqU7eNmAa7Qlu.e",
+    "email": "guptanitintd@gmail.com",
+    "age": 22
+  }
+]

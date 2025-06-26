@@ -3,56 +3,175 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= vehicle.vehicleName %> - Vehicle Details</title>
-    <link rel="stylesheet" href="/style.css">
+    <title><%= vehicle.vehicleName %> - Vehicle Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+        .vehicle-detail-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            overflow: hidden;
+            margin-top: 2rem;
+        }
+        .vehicle-image-large {
+            height: 400px;
+            overflow: hidden;
+        }
+        .vehicle-image-large img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .vehicle-info-detail {
+            padding: 2rem;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        .info-item {
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        .info-item.full-width {
+            grid-column: 1 / -1;
+        }
+        .info-item label {
+            font-weight: 600;
+            color: #495057;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        .info-item .price {
+            color: #28a745;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+        .info-item .id {
+            color: #6c757d;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+        .vehicle-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+        .btn {
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        @media (max-width: 768px) {
+            .vehicle-image-large {
+                height: 250px;
+            }
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+            .vehicle-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>🚗 Vehicle Details</h1>
-            <a href="/" class="btn btn-secondary">← Back to List</a>
-        </header>
-
-        <main>
-            <div class="vehicle-detail">
-                <div class="vehicle-image-large">
-                    <img src="<%= vehicle.image %>" alt="<%= vehicle.vehicleName %>" onerror="this.src='https://via.placeholder.com/600x400?text=No+Image'">
-                </div>
-                
-                <div class="vehicle-info-detail">
-                    <h2><%= vehicle.vehicleName %></h2>
-                    
-                    <div class="info-grid">
-                        <div class="info-item">
-                            <label>Brand:</label>
-                            <span><%= vehicle.brand %></span>
-                        </div>
-                        
-                        <div class="info-item">
-                            <label>Price:</label>
-                            <span class="price">$<%= vehicle.price.toLocaleString() %></span>
-                        </div>
-                        
-                        <div class="info-item full-width">
-                            <label>Description:</label>
-                            <p><%= vehicle.desc %></p>
-                        </div>
-                        
-                        <div class="info-item">
-                            <label>ID:</label>
-                            <span class="id"><%= vehicle.id %></span>
-                        </div>
-                    </div>
-                    
-                    <div class="vehicle-actions">
-                        <a href="/edit/<%= vehicle.id %>" class="btn btn-primary">Edit Vehicle</a>
-                        <button onclick="deleteVehicle('<%= vehicle.id %>')" class="btn btn-danger">Delete Vehicle</button>
-                    </div>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-car me-2"></i>Vehicle Management
+            </a>
+            
+            <div class="navbar-nav ms-auto">
+                <div class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-user me-2"></i><%= user.username %>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><span class="dropdown-item-text"><i class="fas fa-envelope me-2"></i><%= user.email %></span></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="/logout"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                    </ul>
                 </div>
             </div>
-        </main>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h2 mb-0">
+                <i class="fas fa-car me-2"></i>Vehicle Details
+            </h1>
+            <a href="/" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-2"></i>Back to List
+            </a>
+        </div>
+
+        <div class="vehicle-detail-container">
+            <div class="vehicle-image-large">
+                <img src="<%= vehicle.image %>" alt="<%= vehicle.vehicleName %>" onerror="this.src='https://via.placeholder.com/600x400?text=No+Image'">
+            </div>
+            
+            <div class="vehicle-info-detail">
+                <h2 class="mb-3"><%= vehicle.vehicleName %></h2>
+                
+                <div class="info-grid">
+                    <div class="info-item">
+                        <label><i class="fas fa-tag me-2"></i>Brand</label>
+                        <span><%= vehicle.brand %></span>
+                    </div>
+                    
+                    <div class="info-item">
+                        <label><i class="fas fa-dollar-sign me-2"></i>Price</label>
+                        <span class="price">$<%= vehicle.price.toLocaleString() %></span>
+                    </div>
+                    
+                    <div class="info-item">
+                        <label><i class="fas fa-fingerprint me-2"></i>ID</label>
+                        <span class="id"><%= vehicle.id %></span>
+                    </div>
+                    
+                    <div class="info-item full-width">
+                        <label><i class="fas fa-align-left me-2"></i>Description</label>
+                        <p class="mb-0"><%= vehicle.desc %></p>
+                    </div>
+                </div>
+                
+                <div class="vehicle-actions">
+                    <a href="/edit/<%= vehicle.id %>" class="btn btn-primary">
+                        <i class="fas fa-edit me-2"></i>Edit Vehicle
+                    </a>
+                    <button onclick="deleteVehicle('<%= vehicle.id %>')" class="btn btn-danger">
+                        <i class="fas fa-trash me-2"></i>Delete Vehicle
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         function deleteVehicle(id) {
             if (confirm('Are you sure you want to delete this vehicle? This action cannot be undone.')) {
